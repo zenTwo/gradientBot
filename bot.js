@@ -1,4 +1,4 @@
-//Require .env NPM package
+// Require .env NPM package
 require('dotenv').config();
 
 // Require twit NPM package.
@@ -13,13 +13,16 @@ var request = require( 'request' );
 // Require axios NPM package.
 const axios = require( 'axios' );
 
+// Helper functions
+const { randomNum } = require('./helpers.js');
+
 // Pass object to twit package.
 const T = new Twit( {
 	consumer_key: process.env.CONSUMER_KEY,
 	consumer_secret: process.env.CONSUMER_SECRET,
 	access_token: process.env.ACCESS_TOKEN,
 	access_token_secret: process.env.ACCESS_TOKEN_SECRET
-} );
+});
 
 // Variable for key.
 const key = process.env.KEY;
