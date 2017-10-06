@@ -4,6 +4,12 @@ require('dotenv').config();
 // Require twit NPM package.
 const Twit = require( 'twit' );
 
+var exec = require( 'child_process' ).exec;
+var fs = require( 'fs' );
+
+// Request for downloading files
+var request = require( 'request' );
+
 // Require axios NPM package.
 const axios = require( 'axios' );
 
@@ -25,94 +31,53 @@ const key = process.env.KEY;
 const hour = 3600000;
 
 // Variable for setting time interval.
-const tweetInterval = hour * 8; // for actual bot timing
-// const tweetInterval = 10000; // for testing bot timing
+// const tweetInterval = hour * 8; // for actual bot timing
+const tweetInterval = 8000; // for testing bot timing
 
-// Get the twitter user stream (for responses to JordyBot).
+// Get the twitter user stream (for responses to bot).
 const stream = T.stream('user');
 
-// Return random number. Moved into helper file
-// function randomNum( length ) {
-// 	return Math.floor( Math.random() * length );
-// }
+tweetIt();
 
+setInterval( tweetIt, tweetInterval );
 
-// Tweet the final deal.
-function saySomething( X ) {
+// Initial bot functionality.
+function tweetIt() {
 
-	const tweet = {
-		status: `"${ X }"`
-	}
+	var command = 'processing-java --sketch=`pwd`/assets/ --run';
+	exec(command, processing);
 
-	T.post('statuses/update', tweet, tweeted);
+	// Callback for command line process.
+	function processing() {
 
-	// console.log(); // for testing
-
-	function tweeted(err, data, response) {
-		if (err) {
-			console.log( 'Uh oh, something askew.' );
-		} else {
-			console.log( 'Woo, it worked!' );
+		const filename = 'assets/output.jpeg';
+		const params = {
+			encoding: 'base64'
 		}
-	}
-}
 
-// 1.) Set interval
-setInterval( X, tweetInterval );
+		// Read the file made by Processing.
+		var base64 = fs.readFileSync(filename, params);
 
+		// Upload the media
+		T.post('media/upload', { media_data: base64 }, uploaded);
 
-// Create an event when someone tweets JordyBot.
-stream.on('tweet', tweetEvent);
+		function uploaded(err, data, response) {
 
-function tweetEvent( hexCodes ) {
+			const id = data.media_id_string;
+			const tweet = {
+				status: '#TotallyWorks',
+				media_ids: [id]
+			}
+			T.post('statuses/update', tweet, tweeted);
+		};
 
-	// Create boolean for seeing if it's a reply.
-	let isReply = false;
-
-	// Did they @ me?
-	const replyTo = hexCodes.in_reply_to_screen_name;
-
-	// Reset boolean to true if they were talking to little ol' JordyBot.
-	if ( replyTo === 'name_of_bot' ) {
-		isReply = true;
-	}
-
-	// Content of tweet.
-	const content = hexCodes.text.toLowerCase();
-
-	// Who is talking to me?
-	const name = hexCodes.user.screen_name;
-
-	// Set response as empty string.
-	let response = '';
-
-	// Were they talking to JordyBot? If so, then...
-	if ( isReply ) {
-
-
-		// If it isn't an empty string...respond accordingly.
-		if ( response !== '' ) {
-			// console.log(response);
-			responseTweet('@' + name + ' ' + response);
-		}
-	}
-}
-
-// Tweet it out, loud + proud.
-function responseTweet( txt ) {
-
-	// Content of response tweet.
-	const tweet = {
-		status: txt
-	}
-
-	T.post('statuses/update', tweet, tweeted);
-
-	function tweeted(err, data, response) {
-		if (err) {
-			console.log( 'Oops.' );
-		} else {
-			console.log( 'Response completed.' );
-		}
-	}
-}
+		// Callback for when tweet is sent.
+		function tweeted(err, data, response) {
+			if (err) {
+				console.log("Something went wrong...");
+			} else {
+				console.log("It worked!");
+			}
+		}; // end tweeted
+	} // end processing
+} // end tweetIt
