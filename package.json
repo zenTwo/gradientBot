@@ -1,0 +1,27 @@
+{
+  "name": "gradientbot",
+  "version": "1.0.0",
+  "description": "A twitter bot for gradients",
+  "main": "bot.js",
+  "dependencies": {
+    "twit": "^2.2.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allisonplus/gradientBot.git"
+  },
+  "keywords": [
+    "gradient",
+    "twitter"
+  ],
+  "author": "Allison Tarr, Robin Hamill",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/allisonplus/gradientBot/issues"
+  },
+  "homepage": "https://github.com/allisonplus/gradientBot#readme"
+}
