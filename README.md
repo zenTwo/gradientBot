@@ -2,10 +2,6 @@
 
 A Twitter gradient bot.
 
-## API Reference
-
-Utilizes the API at [MusixMatch](https://developer.musixmatch.com/)
-
 ## Resources Used
 
 + [Coding Rainbow](http://codingrainbow.com) videos
