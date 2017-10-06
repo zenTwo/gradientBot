@@ -4,6 +4,8 @@
   "description": "A twitter bot for gradients",
   "main": "bot.js",
   "dependencies": {
+    "axios": "^0.16.2",
+    "dotenv": "^4.0.0",
     "twit": "^2.2.9"
   },
   "devDependencies": {},
