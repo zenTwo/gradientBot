@@ -14,7 +14,8 @@ var request = require( 'request' );
 const axios = require( 'axios' );
 
 // Helper functions
-const { randomNum } = require('./helpers.js');
+const helpers = require('./helpers.js');
+const randomNum = helpers.randomNum;
 
 // Pass object to twit package.
 const T = new Twit( {
