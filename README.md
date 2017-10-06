@@ -1,2 +1,2 @@
 # gradientBot
-A Twitter gradient bot
+> A Twitter gradient bot built on Node.js
