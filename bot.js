@@ -1,4 +1,4 @@
-//Require .env NPM package
+// Require .env NPM package
 require('dotenv').config();
 
 // Require twit NPM package.
@@ -7,13 +7,16 @@ const Twit = require( 'twit' );
 // Require axios NPM package.
 const axios = require( 'axios' );
 
+// Helper functions
+const { randomNum } = require('./helpers.js');
+
 // Pass object to twit package.
 const T = new Twit( {
 	consumer_key: process.env.CONSUMER_KEY,
 	consumer_secret: process.env.CONSUMER_SECRET,
 	access_token: process.env.ACCESS_TOKEN,
 	access_token_secret: process.env.ACCESS_TOKEN_SECRET
-} );
+});
 
 // Variable for key.
 const key = process.env.KEY;
@@ -28,10 +31,10 @@ const tweetInterval = hour * 8; // for actual bot timing
 // Get the twitter user stream (for responses to JordyBot).
 const stream = T.stream('user');
 
-// Return random number.
-function randomNum( length ) {
-	return Math.floor( Math.random() * length );
-}
+// Return random number. Moved into helper file
+// function randomNum( length ) {
+// 	return Math.floor( Math.random() * length );
+// }
 
 
 // Tweet the final deal.
