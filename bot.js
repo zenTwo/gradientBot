@@ -1,3 +1,6 @@
+// Set const for development vs production
+const dev = false;
+
 // Require .env NPM package
 require('dotenv').config();
 
@@ -14,7 +17,8 @@ var request = require( 'request' );
 const axios = require( 'axios' );
 
 // Helper functions
-const { randomNum } = require('./helpers.js');
+const helpers = require('./helpers.js');
+const randomNum = helpers.randomNum;
 
 // Pass object to twit package.
 const T = new Twit( {
@@ -32,7 +36,7 @@ const hour = 3600000;
 
 // Variable for setting time interval.
 // const tweetInterval = hour * 8; // for actual bot timing
-const tweetInterval = 8000; // for testing bot timing
+const tweetInterval = 12000; // for testing bot timing
 
 // Get the twitter user stream (for responses to bot).
 const stream = T.stream('user');
@@ -44,7 +48,7 @@ setInterval( tweetIt, tweetInterval );
 // Initial bot functionality.
 function tweetIt() {
 
-	var command = 'processing-java --sketch=`pwd`/assets/ --run';
+	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : './assets/assets';
 	exec(command, processing);
 
 	// Callback for command line process.
