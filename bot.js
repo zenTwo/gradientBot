@@ -1,3 +1,6 @@
+// Set const for development vs production
+const dev = true;
+
 // Require .env NPM package
 require('dotenv').config();
 
@@ -45,7 +48,8 @@ setInterval( tweetIt, tweetInterval );
 // Initial bot functionality.
 function tweetIt() {
 
-	var command = 'processing-java --sketch=`pwd`/assets/ --run';
+
+	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : 'gradient_bot/gradient_bot';
 	exec(command, processing);
 
 	// Callback for command line process.
