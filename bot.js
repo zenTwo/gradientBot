@@ -49,6 +49,7 @@ setInterval( tweetIt, tweetInterval );
 function tweetIt() {
 
 	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : './assets/assets';
+
 	exec(command, processing);
 
 	// Callback for command line process.
