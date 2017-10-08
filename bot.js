@@ -4,6 +4,7 @@ const exec = require( 'child_process' ).exec;
 const fs = require( 'fs' );
 const request = require( 'request' ); // Request for downloading files
 const axios = require( 'axios' ); // Require axios NPM package.
+const hexRgb = require('hex-rgb'); // Hex to RGB package.
 const helpers = require('./helpers.js'); // Helper functions
 require('dotenv').config(); // Require .env NPM package
 
