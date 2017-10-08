@@ -1,5 +1,5 @@
 // Set const for development vs production
-const dev = true;
+const dev = false;
 
 // Require .env NPM package
 require('dotenv').config();
@@ -36,7 +36,7 @@ const hour = 3600000;
 
 // Variable for setting time interval.
 // const tweetInterval = hour * 8; // for actual bot timing
-const tweetInterval = 8000; // for testing bot timing
+const tweetInterval = 12000; // for testing bot timing
 
 // Get the twitter user stream (for responses to bot).
 const stream = T.stream('user');
@@ -48,8 +48,8 @@ setInterval( tweetIt, tweetInterval );
 // Initial bot functionality.
 function tweetIt() {
 
+	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : './assets/assets';
 
-	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : 'gradient_bot/gradient_bot';
 	exec(command, processing);
 
 	// Callback for command line process.
