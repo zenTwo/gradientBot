@@ -1,24 +1,14 @@
-// Set const for development vs production
+// Requires
+const Twit = require( 'twit' ); // Require twit NPM package.
+const exec = require( 'child_process' ).exec;
+const fs = require( 'fs' );
+var request = require( 'request' ); // Request for downloading files
+const axios = require( 'axios' ); // Require axios NPM package.
+const helpers = require('./helpers.js'); // Helper functions
+require('dotenv').config(); // Require .env NPM package
+
+// Global vars
 const dev = false;
-
-// Require .env NPM package
-require('dotenv').config();
-
-// Require twit NPM package.
-const Twit = require( 'twit' );
-
-var exec = require( 'child_process' ).exec;
-var fs = require( 'fs' );
-
-// Request for downloading files
-var request = require( 'request' );
-
-// Require axios NPM package.
-const axios = require( 'axios' );
-
-// Helper functions
-const helpers = require('./helpers.js');
-const randomNum = helpers.randomNum;
 
 // Pass object to twit package.
 const T = new Twit( {
