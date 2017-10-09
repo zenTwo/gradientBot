@@ -83,12 +83,13 @@ function tweetEvent(tweet) {
 	// User filter and map to iterate over the array.
 	// Make sure the proposed hexcodes are indeed hexcodes.
 	// Push them into a new array called legitArr.
-	const legitHexArr = tweetArr.filter(word => word[0] === '#')
-	.map(hash => hash.replace('#', ''))
-	.filter(hash => hash.length === 6 || hash.length === 3)
-	.filter(hash => isHex(hash));
+	const legitHexArr = tweetArr
+		.filter(word => word[0] === '#')
+		.map(hash => hash.replace('#', ''))
+		.filter(hash => hash.length === 6 || hash.length === 3)
+		.filter(hash => isHex(hash));
 
-	console.log(legitHexArr);
+  console.log(legitHexArr);
 } // End tweetEvent
 
 // Tweet it out, loud + proud.
