@@ -78,9 +78,6 @@ function tweetIt() {
 	} // end processing
 } // end tweetIt
 
-// Create an event when someone tweets Spacebot.
-stream.on('tweet', tweetEvent);
-
 function tweetEvent(tweet) {
 	// What's the deal with this tweet?
 	const reply_to = tweet.in_reply_to_screen_name;
@@ -93,12 +90,15 @@ function tweetEvent(tweet) {
 	const legitHexArr = hashtags.filter((hash) => {
 		return (hash.text.length === 6 || hash.text.length === 3);
 	}).filter((hash) => {
-			return isHex(hash.text);
+		return isHex(hash.text);
 	}).map((hash) => {
 		return hash.text;
 	});
 	console.log(legitHexArr);
 }
+
+// Create an event when someone tweets Spacebot.
+stream.on('tweet', tweetEvent);
 
 // Tweet it out, loud + proud.
 function responseTweet( txt ) {
