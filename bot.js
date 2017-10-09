@@ -5,7 +5,7 @@ const fs = require( 'fs' );
 const request = require( 'request' ); // Request for downloading files
 const axios = require( 'axios' ); // Require axios NPM package.
 const hexRgb = require('hex-rgb'); // Hex to RGB package.
-const helpers = require('./helpers.js'); // Helper functions
+const { randomNum, isHex } = require('./helpers.js'); // Helper functions
 require('dotenv').config(); // Require .env NPM package
 
 // Global vars
@@ -64,7 +64,7 @@ function tweetIt() {
 				status: '#TotallyWorks',
 				media_ids: [id]
 			}
-			T.post('statuses/update', tweet, tweeted);
+			// T.post('statuses/update', tweet, tweeted);
 		};
 
 		// Callback for when tweet is sent.
@@ -77,3 +77,43 @@ function tweetIt() {
 		}; // end tweeted
 	} // end processing
 } // end tweetIt
+
+// Create an event when someone tweets Spacebot.
+stream.on('tweet', tweetEvent);
+
+function tweetEvent(tweet) {
+	// What's the deal with this tweet?
+	const reply_to = tweet.in_reply_to_screen_name;
+	const name = tweet.user.screen_name;
+	const txt = tweet.text;
+	const media = tweet.entities.media;
+	const id = tweet.id_str;
+	const hashtags = tweet.entities.hashtags;
+	const legitHexArr = hashtags.filter((hash) => {
+		return (hash.text.length === 6 || hash.text.length === 3);
+	}).filter((hash) => {
+			return isHex(hash.text);
+	}).map((hash) => {
+		return hash.text;
+	});
+	console.log(legitHexArr);
+}
+
+// Tweet it out, loud + proud.
+function responseTweet( txt ) {
+	
+	// Content of response tweet.
+	const tweet = {
+		status: txt
+	}
+
+	T.post('statuses/update', tweet, tweeted);
+	
+	function tweeted(err, data, response) {
+		if (err) {
+			console.log( 'Oops.' );
+		} else {
+			console.log( 'Response completed.' );
+		}
+	}
+}
