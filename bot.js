@@ -70,11 +70,14 @@ function tweetIt() {
 } // end tweetIt
 
 function createJson(hexArr) {
-  let obj = {
-    colours: [],
-  };
+	let obj = {
+		colours: {},
+	};
 
-  obj.colours = hexArr;
+	for (var index = 0; index < hexArr.length; index++) {
+		const rgbVal = hexRgb(hexArr[index]);
+		obj.colours[`color_${index}`] = rgbVal;
+	}
 
   const json = JSON.stringify(obj);
   fs.writeFile('./assets/colourObj.json', json, 'utf8', () => {
