@@ -76,15 +76,18 @@ function tweetEvent(tweet) {
 	const txt = tweet.text;
 	const media = tweet.entities.media;
 	const id = tweet.id_str;
-	const hashtags = tweet.entities.hashtags;
 
-	const legitHexArr = hashtags.filter((hash) => {
-		return (hash.text.length === 6 || hash.text.length === 3);
-	}).filter((hash) => {
-		return isHex(hash.text);
-	}).map((hash) => {
-		return hash.text;
-	});
+	// Create an array from the tweet string, so we can iterate over the words
+	const tweetArr = txt.split(' ');
+
+	// User filter and map to iterate over the array.
+	// Make sure the proposed hexcodes are indeed hexcodes.
+	// Push them into a new array called legitArr.
+	const legitHexArr = tweetArr.filter(word => word[0] === '#')
+	.map(hash => hash.replace('#', ''))
+	.filter(hash => hash.length === 6 || hash.length === 3)
+	.filter(hash => isHex(hash));
+
 	console.log(legitHexArr);
 } // End tweetEvent
 
