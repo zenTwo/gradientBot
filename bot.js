@@ -107,7 +107,7 @@ function responseTweet( txt ) {
 	}
 } // End responseTweet
 
-// Create an event when someone tweets Spacebot.
+// Create an event when someone tweets Deltron_f.
 stream.on('tweet', tweetEvent);
 tweetIt();
 setInterval( tweetIt, tweetInterval );
