@@ -76,14 +76,20 @@ function tweetEvent(tweet) {
 	const txt = tweet.text;
 	const media = tweet.entities.media;
 	const id = tweet.id_str;
-	const hashtags = tweet.entities.hashtags;
 
-	const legitHexArr = hashtags.filter((hash) => {
-		return (hash.text.length === 6 || hash.text.length === 3);
-	}).filter((hash) => {
-		return isHex(hash.text);
-	}).map((hash) => {
-		return hash.text;
+	let tweetArr = txt.split(' ');
+
+	const legitHexArr = tweetArr.filter((word) => {		
+		return word[0] === "#";
+	})
+	.filter((hash) => {
+		return (hash.length === 7 || hash.length === 4);
+	})
+	.map((hash) => {
+		return hash.replace('#', '');
+	})
+	.filter((hash) => {
+		return isHex(hash);
 	});
 	console.log(legitHexArr);
 } // End tweetEvent
