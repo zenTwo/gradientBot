@@ -8,8 +8,8 @@ const hexRgb = require('hex-rgb'); // Hex to RGB package.
 const { randomNum, isHex } = require('./helpers.js'); // Helper functions
 require('dotenv').config(); // Require .env NPM package
 
-// Global vars
-const dev = false;
+// Testing Flag
+const dev = true;
 
 // Pass object to twit package.
 const T = new Twit( {
@@ -89,6 +89,7 @@ function tweetEvent(tweet) {
 	const media = tweet.entities.media;
 	const id = tweet.id_str;
 	const hashtags = tweet.entities.hashtags;
+
 	const legitHexArr = hashtags.filter((hash) => {
 		return (hash.text.length === 6 || hash.text.length === 3);
 	}).filter((hash) => {
