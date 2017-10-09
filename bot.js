@@ -11,6 +11,7 @@ require('dotenv').config(); // Require .env NPM package
 // Testing Flag
 const dev = true;
 
+// Global VARS 
 // Pass object to twit package.
 const T = new Twit( {
 	consumer_key: process.env.CONSUMER_KEY,
@@ -18,30 +19,18 @@ const T = new Twit( {
 	access_token: process.env.ACCESS_TOKEN,
 	access_token_secret: process.env.ACCESS_TOKEN_SECRET
 });
-
-// Variable for key.
-const key = process.env.KEY;
-
-// How many ms in an hour?
-const hour = 3600000;
-
+const key = process.env.KEY; // Variable for key.
+const hour = 3600000; // How many ms in an hour?
 // Variable for setting time interval.
 // const tweetInterval = hour * 8; // for actual bot timing
 const tweetInterval = 12000; // for testing bot timing
-
 // Get the twitter user stream (for responses to bot).
 const stream = T.stream('user');
-
-tweetIt();
-
-setInterval( tweetIt, tweetInterval );
 
 // Initial bot functionality.
 function tweetIt() {
 
 	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : './assets/assets';
-
-	exec(command, processing);
 
 	// Callback for command line process.
 	function processing() {
@@ -63,9 +52,9 @@ function tweetIt() {
 			const tweet = {
 				status: '#TotallyWorks',
 				media_ids: [id]
-			}
+			};
 			// T.post('statuses/update', tweet, tweeted);
-		};
+		}
 
 		// Callback for when tweet is sent.
 		function tweeted(err, data, response) {
@@ -74,8 +63,10 @@ function tweetIt() {
 			} else {
 				console.log("It worked!");
 			}
-		}; // end tweeted
+		} // end tweeted
 	} // end processing
+
+	exec(command, processing);
 } // end tweetIt
 
 function tweetEvent(tweet) {
@@ -95,21 +86,18 @@ function tweetEvent(tweet) {
 		return hash.text;
 	});
 	console.log(legitHexArr);
-}
-
-// Create an event when someone tweets Spacebot.
-stream.on('tweet', tweetEvent);
+} // End tweetEvent
 
 // Tweet it out, loud + proud.
 function responseTweet( txt ) {
-	
+
 	// Content of response tweet.
 	const tweet = {
-		status: txt
-	}
+		status: txt,
+	};
 
 	T.post('statuses/update', tweet, tweeted);
-	
+
 	function tweeted(err, data, response) {
 		if (err) {
 			console.log( 'Oops.' );
@@ -117,4 +105,9 @@ function responseTweet( txt ) {
 			console.log( 'Response completed.' );
 		}
 	}
-}
+} // End responseTweet
+
+// Create an event when someone tweets Spacebot.
+stream.on('tweet', tweetEvent);
+tweetIt();
+setInterval( tweetIt, tweetInterval );
