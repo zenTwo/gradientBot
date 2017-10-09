@@ -77,20 +77,17 @@ function tweetEvent(tweet) {
 	const media = tweet.entities.media;
 	const id = tweet.id_str;
 
+	// Create an array from the tweet string, so we can iterate over the words
 	let tweetArr = txt.split(' ');
 
-	const legitHexArr = tweetArr.filter((word) => {		
-		return word[0] === "#";
-	})
-	.filter((hash) => {
-		return (hash.length === 7 || hash.length === 4);
-	})
-	.map((hash) => {
-		return hash.replace('#', '');
-	})
-	.filter((hash) => {
-		return isHex(hash);
-	});
+	// User filter and map to iterate over the array.
+	// Make sure the proposed hexcodes are indeed hexcodes.
+	// Push them into a new array called legitArr.
+	const legitHexArr = tweetArr.filter(word => word[0] === '#')
+	.map(hash => hash.replace('#', ''))
+	.filter(hash => hash.length === 6 || hash.length === 3)
+	.filter(hash => isHex(hash));
+
 	console.log(legitHexArr);
 } // End tweetEvent
 
