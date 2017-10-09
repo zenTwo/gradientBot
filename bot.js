@@ -69,6 +69,19 @@ function tweetIt() {
 	exec(command, processing);
 } // end tweetIt
 
+function createJson(hexArr) {
+  let obj = {
+    colours: [],
+  };
+
+  obj.colours = hexArr;
+
+  const json = JSON.stringify(obj);
+  fs.writeFile('./assets/colourObj.json', json, 'utf8', () => {
+    console.log('created file!');
+  });
+}
+
 function tweetEvent(tweet) {
 	// What's the deal with this tweet?
 	const reply_to = tweet.in_reply_to_screen_name;
@@ -83,13 +96,15 @@ function tweetEvent(tweet) {
 	// User filter and map to iterate over the array.
 	// Make sure the proposed hexcodes are indeed hexcodes.
 	// Push them into a new array called legitArr.
-	const legitHexArr = tweetArr
+  const legitHexArr = tweetArr
 		.filter(word => word[0] === '#')
 		.map(hash => hash.replace('#', ''))
 		.filter(hash => hash.length === 6 || hash.length === 3)
-		.filter(hash => isHex(hash));
+    .filter(hash => isHex(hash))
+    .slice(0, 2);
 
   console.log(legitHexArr);
+  createJson(legitHexArr);
 } // End tweetEvent
 
 // Tweet it out, loud + proud.
