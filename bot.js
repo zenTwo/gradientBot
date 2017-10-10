@@ -5,13 +5,16 @@ const fs = require( 'fs' );
 const request = require( 'request' ); // Request for downloading files
 const axios = require( 'axios' ); // Require axios NPM package.
 const hexRgb = require('hex-rgb'); // Hex to RGB package.
-const { randomNum, isHex } = require('./helpers.js'); // Helper functions
+const helpers = require('./helpers.js'); // Helper functions
 require('dotenv').config(); // Require .env NPM package
 
 // Testing Flag
-const dev = true;
+const dev = false;
 
 // Global VARS
+const randomNum = helpers.randomNum;
+const isHex = helpers.isHex;
+
 // Pass object to twit package.
 const T = new Twit( {
 	consumer_key: process.env.CONSUMER_KEY,
@@ -22,8 +25,8 @@ const T = new Twit( {
 const key = process.env.KEY; // Variable for key.
 const hour = 3600000; // How many ms in an hour?
 // Variable for setting time interval.
-// const tweetInterval = hour * 8; // for actual bot timing
-const tweetInterval = 12000; // for testing bot timing
+const tweetInterval = hour * 8; // for actual bot timing
+// const tweetInterval = 12000; // for testing bot timing
 
 // Get the twitter user stream (for responses to bot).
 const stream = T.stream('user');
@@ -65,7 +68,7 @@ function tweetIt() {
 				status: gradientCSS,
 				media_ids: [id]
 			};
-			// T.post('statuses/update', tweet, tweeted);
+			T.post('statuses/update', tweet, tweeted);
 		}
 
 		// Callback for when tweet is sent.
