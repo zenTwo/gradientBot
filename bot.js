@@ -37,12 +37,12 @@ function tweetIt() {
 	const colourOne = getRandomColours();
 	const colourTwo = getRandomColours();
 
-	let obj = {
+	var obj = {
 		colour_0: colourOne,
 		colour_1: colourTwo
 	};
 
-	const gradientCSS = ' linear-gradient(90deg, rgb(' + obj.colour_0 + '), rgb(' + obj.colour_1 + '));'
+	const gradientCSS = ' linear-gradient( 90deg, rgb( ' + obj.colour_0 + ' ), rgb( ' + obj.colour_1 + ' ) );'
 	createJsonFile(obj);
 
 	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : './assets/assets';
@@ -98,7 +98,7 @@ function convertToRgb(hexArr) {
 	// {
 	// 	colour_0: [255, 255, 255]
 	// }
-	let obj = {};
+	var obj = {};
 
 	for (var index = 0; index < hexArr.length; index++) {
 		const rgbVal = hexRgb(hexArr[index]);
@@ -152,7 +152,7 @@ function tweetEvent(tweet) {
 function gradientRequest(tweet, legitHexArr) {
 	console.log('start gradient request');
 
-	const gradientCSS = ' linear-gradient(90deg, #' + legitHexArr[0] + ', #' + legitHexArr[1] + ');'
+	const gradientCSS = ' linear-gradient( 90deg, #' + legitHexArr[0] + ', #' + legitHexArr[1] + ' );'
 	const name = tweet.user.screen_name;
 	const id = tweet.id_str;
 
