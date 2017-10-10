@@ -11,7 +11,7 @@ require('dotenv').config(); // Require .env NPM package
 // Testing Flag
 const dev = true;
 
-// Global VARS 
+// Global VARS
 // Pass object to twit package.
 const T = new Twit( {
 	consumer_key: process.env.CONSUMER_KEY,
@@ -29,6 +29,16 @@ const stream = T.stream('user');
 
 // Initial bot functionality.
 function tweetIt() {
+
+	const colourOne = getRandomColours();
+	const colourTwo = getRandomColours();
+
+	let obj = {
+		colour_0: colourOne,
+		colour_1: colourTwo
+	};
+
+	createJsonFile(obj);
 
 	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : './assets/assets';
 
@@ -59,9 +69,9 @@ function tweetIt() {
 		// Callback for when tweet is sent.
 		function tweeted(err, data, response) {
 			if (err) {
-				console.log("Something went wrong...");
+				console.log( 'Something went wrong...' );
 			} else {
-				console.log("It worked!");
+				console.log( 'It worked!' );
 			}
 		} // end tweeted
 	} // end processing
@@ -69,20 +79,37 @@ function tweetIt() {
 	exec(command, processing);
 } // end tweetIt
 
-function createJson(hexArr) {
-	let obj = {
-		colours: {},
-	};
+function getRandomColours() {
+	const colourArr = [
+		randomNum(256),
+		randomNum(256),
+		randomNum(256)
+	];
+	return colourArr;
+}
+
+function convertToRgb(hexArr) {
+	// Object template:
+	// {
+	// 	colour_0: [255, 255, 255]
+	// }
+	let obj = {};
 
 	for (var index = 0; index < hexArr.length; index++) {
 		const rgbVal = hexRgb(hexArr[index]);
-		obj.colours[`color_${index}`] = rgbVal;
+		obj[`colour_${index}`] = rgbVal;
 	}
+	createJsonFile(obj);
+}
 
-  const json = JSON.stringify(obj);
-  fs.writeFile('./assets/colourObj.json', json, 'utf8', () => {
-    console.log('created file!');
-  });
+
+function createJsonFile(obj) {
+	const json = JSON.stringify(obj);
+		fs.writeFile('./assets/colourObj.json', json, 'utf8', () => {
+		console.log( 'created file!' );
+	});
+
+
 }
 
 function tweetEvent(tweet) {
@@ -99,15 +126,15 @@ function tweetEvent(tweet) {
 	// User filter and map to iterate over the array.
 	// Make sure the proposed hexcodes are indeed hexcodes.
 	// Push them into a new array called legitArr.
-  const legitHexArr = tweetArr
+	const legitHexArr = tweetArr
 		.filter(word => word[0] === '#')
 		.map(hash => hash.replace('#', ''))
 		.filter(hash => hash.length === 6 || hash.length === 3)
-    .filter(hash => isHex(hash))
-    .slice(0, 2);
+		.filter(hash => isHex(hash))
+		.slice(0, 2);
 
-  console.log(legitHexArr);
-  createJson(legitHexArr);
+	console.log(legitHexArr);
+	convertToRgb(legitHexArr);
 } // End tweetEvent
 
 // Tweet it out, loud + proud.
@@ -132,4 +159,4 @@ function responseTweet( txt ) {
 // Create an event when someone tweets Deltron_f.
 stream.on('tweet', tweetEvent);
 tweetIt();
-setInterval( tweetIt, tweetInterval );
+// setInterval( tweetIt, tweetInterval );
