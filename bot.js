@@ -39,6 +39,7 @@ function tweetIt() {
 		colour_1: colourTwo
 	};
 
+	const gradientCSS = ' linear-gradient(90deg, rgb(' + obj.colour_0 + '), rgb(' + obj.colour_1 + '));'
 	createJsonFile(obj);
 
 	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : './assets/assets';
@@ -61,7 +62,7 @@ function tweetIt() {
 
 			const id = data.media_id_string;
 			const tweet = {
-				status: '#TotallyWorks',
+				status: gradientCSS,
 				media_ids: [id]
 			};
 			// T.post('statuses/update', tweet, tweeted);
@@ -196,4 +197,4 @@ function gradientRequest(tweet, legitHexArr) {
 } // End gradientRequest
 
 tweetIt();
-// setInterval( tweetIt, tweetInterval );
+setInterval( tweetIt, tweetInterval );
