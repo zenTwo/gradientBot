@@ -70,13 +70,11 @@ function tweetIt() {
 } // end tweetIt
 
 function createJson(hexArr) {
-	let obj = {
-		colours: {},
-	};
+	let obj = {};
 
 	for (var index = 0; index < hexArr.length; index++) {
 		const rgbVal = hexRgb(hexArr[index]);
-		obj.colours[`color_${index}`] = rgbVal;
+		obj[`color_${index}`] = rgbVal;
 	}
 
 const json = JSON.stringify(obj);
@@ -132,4 +130,4 @@ function responseTweet( txt ) {
 // Create an event when someone tweets Deltron_f.
 stream.on('tweet', tweetEvent);
 tweetIt();
-setInterval( tweetIt, tweetInterval );
+// setInterval( tweetIt, tweetInterval );
