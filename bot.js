@@ -140,14 +140,15 @@ function tweetEvent(tweet) {
 
 		console.log(legitHexArr);
 		convertToRgb(legitHexArr);
-		gradientRequest(tweet);
+		gradientRequest(tweet, legitHexArr);
 	}
 } // End tweetEvent
 
 // // Tweet it out, loud + proud.
-function gradientRequest(tweet) {
+function gradientRequest(tweet, legitHexArr) {
 	console.log('start gradient request');
 
+	const gradientCSS = ' linear-gradient(90deg, #' + legitHexArr[0] + ', #' + legitHexArr[1] + ');'
 	const name = tweet.user.screen_name;
 	const id = tweet.id_str;
 
@@ -175,7 +176,7 @@ function gradientRequest(tweet) {
 
 			const id = data.media_id_string;
 			const tweet = {
-				status: '@' + name + ' #WhatWillActuallyAppear',
+				status: '@' + name + gradientCSS,
 				in_reply_to_status_id: id,
 				media_ids: [id]
 			};
