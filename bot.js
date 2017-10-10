@@ -30,6 +30,16 @@ const stream = T.stream('user');
 // Initial bot functionality.
 function tweetIt() {
 
+	const colourOne = getRandomColours();
+	const colourTwo = getRandomColours();
+
+	let obj = {
+		colour_0: colourOne,
+		colour_1: colourTwo
+	};
+
+	createJsonFile(obj);
+
 	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : './assets/assets';
 
 	// Callback for command line process.
@@ -69,18 +79,37 @@ function tweetIt() {
 	exec(command, processing);
 } // end tweetIt
 
-function createJson(hexArr) {
+function getRandomColours() {
+	const colourArr = [
+		randomNum(256),
+		randomNum(256),
+		randomNum(256)
+	];
+	return colourArr;
+}
+
+function convertToRgb(hexArr) {
+	// Object template:
+	// {
+	// 	colour_0: [255, 255, 255]
+	// }
 	let obj = {};
 
 	for (var index = 0; index < hexArr.length; index++) {
 		const rgbVal = hexRgb(hexArr[index]);
 		obj[`colour_${index}`] = rgbVal;
 	}
+	createJsonFile(obj);
+}
 
-const json = JSON.stringify(obj);
-	fs.writeFile('./assets/colourObj.json', json, 'utf8', () => {
+
+function createJsonFile(obj) {
+	const json = JSON.stringify(obj);
+		fs.writeFile('./assets/colourObj.json', json, 'utf8', () => {
 		console.log( 'created file!' );
 	});
+
+
 }
 
 function tweetEvent(tweet) {
@@ -105,7 +134,7 @@ function tweetEvent(tweet) {
 		.slice(0, 2);
 
 	console.log(legitHexArr);
-	createJson(legitHexArr);
+	convertToRgb(legitHexArr);
 } // End tweetEvent
 
 // Tweet it out, loud + proud.
