@@ -59,9 +59,9 @@ function tweetIt() {
 		// Callback for when tweet is sent.
 		function tweeted(err, data, response) {
 			if (err) {
-				console.log("Something went wrong...");
+				console.log( 'Something went wrong...' );
 			} else {
-				console.log("It worked!");
+				console.log( 'It worked!' );
 			}
 		} // end tweeted
 	} // end processing
@@ -74,12 +74,12 @@ function createJson(hexArr) {
 
 	for (var index = 0; index < hexArr.length; index++) {
 		const rgbVal = hexRgb(hexArr[index]);
-		obj[`color_${index}`] = rgbVal;
+		obj[`colour_${index}`] = rgbVal;
 	}
 
 const json = JSON.stringify(obj);
 	fs.writeFile('./assets/colourObj.json', json, 'utf8', () => {
-		console.log('created file!');
+		console.log( 'created file!' );
 	});
 }
 

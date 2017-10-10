@@ -5,7 +5,7 @@ void setup() {
 	noStroke();
 
 	json = loadJSONObject("colourObj.json");
-	JSONArray colourArrayOne = json.getJSONArray("color_0");
+	JSONArray colourArrayOne = json.getJSONArray("colour_0");
 
 	Object red = colourArrayOne.get(0);
 	Object blue = colourArrayOne.get(1);
@@ -16,7 +16,7 @@ void setup() {
 	int b = Integer.parseInt(green.toString());
 
 	json = loadJSONObject("colourObj.json");
-	JSONArray colourArrayTwo = json.getJSONArray("color_1");
+	JSONArray colourArrayTwo = json.getJSONArray("colour_1");
 
 	Object redTwo = colourArrayTwo.get(0);
 	Object blueTwo = colourArrayTwo.get(1);
