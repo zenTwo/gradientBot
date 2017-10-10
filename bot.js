@@ -24,6 +24,7 @@ const hour = 3600000; // How many ms in an hour?
 // Variable for setting time interval.
 // const tweetInterval = hour * 8; // for actual bot timing
 const tweetInterval = 12000; // for testing bot timing
+
 // Get the twitter user stream (for responses to bot).
 const stream = T.stream('user');
 
@@ -109,6 +110,9 @@ function createJsonFile(obj) {
 	});
 }
 
+// Create an event when someone tweets Deltron_f.
+stream.on('tweet', tweetEvent);
+
 function tweetEvent(tweet) {
 
 	// What's the deal with this tweet?
@@ -134,10 +138,10 @@ function tweetEvent(tweet) {
 			.filter(hash => isHex(hash))
 			.slice(0, 2);
 
-		// console.log(legitHexArr);
+		console.log(legitHexArr);
 		convertToRgb(legitHexArr);
 		gradientRequest(tweet);
-	} // endif
+	}
 } // End tweetEvent
 
 // // Tweet it out, loud + proud.
@@ -190,7 +194,5 @@ function gradientRequest(tweet) {
 	exec(command, processing);
 } // End gradientRequest
 
-// Create an event when someone tweets Deltron_f.
-stream.on('tweet', tweetEvent);
 tweetIt();
 // setInterval( tweetIt, tweetInterval );
