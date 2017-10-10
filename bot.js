@@ -102,17 +102,15 @@ function convertToRgb(hexArr) {
 	createJsonFile(obj);
 }
 
-
 function createJsonFile(obj) {
 	const json = JSON.stringify(obj);
 		fs.writeFile('./assets/colourObj.json', json, 'utf8', () => {
-		console.log( 'created file!' );
+		console.log( 'created json file!' );
 	});
-
-
 }
 
 function tweetEvent(tweet) {
+
 	// What's the deal with this tweet?
 	const reply_to = tweet.in_reply_to_screen_name;
 	const name = tweet.user.screen_name;
@@ -123,38 +121,74 @@ function tweetEvent(tweet) {
 	// Create an array from the tweet string, so we can iterate over the words
 	const tweetArr = txt.split(' ');
 
-	// User filter and map to iterate over the array.
-	// Make sure the proposed hexcodes are indeed hexcodes.
-	// Push them into a new array called legitArr.
-	const legitHexArr = tweetArr
-		.filter(word => word[0] === '#')
-		.map(hash => hash.replace('#', ''))
-		.filter(hash => hash.length === 6 || hash.length === 3)
-		.filter(hash => isHex(hash))
-		.slice(0, 2);
+	// You talking to me?
+	if ( reply_to === 'deltron_f' ) {
 
-	console.log(legitHexArr);
-	convertToRgb(legitHexArr);
+		// User filter and map to iterate over the array.
+		// Make sure the proposed hexcodes are indeed hexcodes.
+		// Push them into a new array called legitArr.
+		const legitHexArr = tweetArr
+			.filter(word => word[0] === '#')
+			.map(hash => hash.replace('#', ''))
+			.filter(hash => hash.length === 6 || hash.length === 3)
+			.filter(hash => isHex(hash))
+			.slice(0, 2);
+
+		// console.log(legitHexArr);
+		convertToRgb(legitHexArr);
+		gradientRequest(tweet);
+	} // endif
 } // End tweetEvent
 
-// Tweet it out, loud + proud.
-function responseTweet( txt ) {
+// // Tweet it out, loud + proud.
+function gradientRequest(tweet) {
+	console.log('start gradient request');
 
-	// Content of response tweet.
-	const tweet = {
-		status: txt,
-	};
+	const name = tweet.user.screen_name;
+	const id = tweet.id_str;
 
-	T.post('statuses/update', tweet, tweeted);
+	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : './assets/assets';
 
-	function tweeted(err, data, response) {
-		if (err) {
-			console.log( 'Oops.' );
-		} else {
-			console.log( 'Response completed.' );
+	// Callback for command line process.
+	function processing() {
+
+		console.log('processing function starting...');
+
+		const filename = 'assets/output.jpeg';
+		const params = {
+			encoding: 'base64'
 		}
-	}
-} // End responseTweet
+
+		// Read pde file made by Processing.
+		var base64 = fs.readFileSync(filename, params);
+
+		// Upload media.
+		T.post('media/upload', { media_data: base64 }, uploaded);
+
+		function uploaded(err, data, response) {
+
+			console.log("uploaded function starting..");
+
+			const id = data.media_id_string;
+			const tweet = {
+				status: '@' + name + ' #WhatWillActuallyAppear',
+				in_reply_to_status_id: id,
+				media_ids: [id]
+			};
+			T.post('statuses/update', tweet, tweeted);
+		}
+
+		// Callback for when tweet is sent.
+		function tweeted(err, data, response) {
+			if (err) {
+				console.log( 'Something went wrong...' );
+			} else {
+				console.log( 'It worked!' );
+			}
+		} // end tweeted
+	} // end processing
+	exec(command, processing);
+} // End gradientRequest
 
 // Create an event when someone tweets Deltron_f.
 stream.on('tweet', tweetEvent);
