@@ -122,11 +122,11 @@ function tweetEvent(tweet) {
 	const media = tweet.entities.media;
 	const id = tweet.id_str;
 
-	// Create an array from the tweet string, so we can iterate over the words
-	const tweetArr = txt.split(' ');
-
 	// You talking to me?
 	if ( reply_to === 'deltron_f' ) {
+
+		// Create an array from the tweet string, so we can iterate over the words
+		const tweetArr = txt.split(' ');
 
 		// User filter and map to iterate over the array.
 		// Make sure the proposed hexcodes are indeed hexcodes.
