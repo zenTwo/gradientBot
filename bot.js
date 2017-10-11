@@ -93,13 +93,6 @@ function getRandomColours() {
 	return colourArr;
 }
 
-function createJsonFile(obj) {
-	const json = JSON.stringify(obj);
-		fs.writeFile('./assets/colourObj.json', json, 'utf8', () => {
-		console.log( 'created json file!' );
-	});
-}
-
 function convertToRgb(hexArr) {
 	// Object template:
 	// {
@@ -114,17 +107,15 @@ function convertToRgb(hexArr) {
 	createJsonFile(obj);
 }
 
+function createJsonFile(obj) {
+	const json = JSON.stringify(obj);
+		fs.writeFile('./assets/colourObj.json', json, 'utf8', () => {
+		console.log( 'created json file!' );
+	});
+}
+
 // Create an event when someone tweets Deltron_f.
 stream.on('tweet', tweetEvent);
-
-function instructionsTweet(tweetObj) {
-	const name = tweetObj.user.screen_name;
-	const instructionMessage = "I can make you a nice gradient! Just @ me with two (2) hex codes.";
-	const tweet = {
-		status: `@${name} ${instructionMessage}`
-	};
-	T.post('statuses/update', tweet, tweeted);
-}
 
 function tweetEvent(tweet) {
 
@@ -151,55 +142,11 @@ function tweetEvent(tweet) {
 			.filter(hash => isHex(hash))
 			.slice(0, 2);
 
-		if (legitHexArr.length === 2) {
-			console.log(legitHexArr);
-			convertToRgb(legitHexArr);
-			gradientRequest(tweet, legitHexArr);
-		} else {
-			instructionsTweet(tweet);
-		}
-
+		console.log(legitHexArr);
+		convertToRgb(legitHexArr);
+		gradientRequest(tweet, legitHexArr);
 	}
 } // End tweetEvent
-
-// Callback for when tweet is sent.
-function tweeted(err, data, response) {
-	if (err) {
-		console.log( 'Something went wrong...' );
-	} else {
-		console.log( 'It worked!' );
-	}
-} // end tweeted
-
-// Callback for command line process.
-function processing() {
-	
-	console.log('processing function starting...');
-
-	const filename = 'assets/output.jpeg';
-	const params = {
-		encoding: 'base64'
-	}
-
-	// Read pde file made by Processing.
-	var base64 = fs.readFileSync(filename, params);
-
-	// Upload media.
-	T.post('media/upload', { media_data: base64 }, uploaded);
-
-	function uploaded(err, data, response) {
-
-		console.log("uploaded function starting..");
-
-		const id = data.media_id_string;
-		const tweet = {
-			status: '@' + name + gradientCSS,
-			in_reply_to_status_id: id,
-			media_ids: [id]
-		};
-		T.post('statuses/update', tweet, tweeted);
-	}
-} // end processing
 
 // // Tweet it out, loud + proud.
 function gradientRequest(tweet, legitHexArr) {
@@ -211,6 +158,44 @@ function gradientRequest(tweet, legitHexArr) {
 
 	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : './assets/assets';
 
+	// Callback for command line process.
+	function processing() {
+
+		console.log('processing function starting...');
+
+		const filename = 'assets/output.jpeg';
+		const params = {
+			encoding: 'base64'
+		}
+
+		// Read pde file made by Processing.
+		var base64 = fs.readFileSync(filename, params);
+
+		// Upload media.
+		T.post('media/upload', { media_data: base64 }, uploaded);
+
+		function uploaded(err, data, response) {
+
+			console.log("uploaded function starting..");
+
+			const id = data.media_id_string;
+			const tweet = {
+				status: '@' + name + gradientCSS,
+				in_reply_to_status_id: id,
+				media_ids: [id]
+			};
+			T.post('statuses/update', tweet, tweeted);
+		}
+
+		// Callback for when tweet is sent.
+		function tweeted(err, data, response) {
+			if (err) {
+				console.log( 'Something went wrong...' );
+			} else {
+				console.log( 'It worked!' );
+			}
+		} // end tweeted
+	} // end processing
 	exec(command, processing);
 } // End gradientRequest
 
