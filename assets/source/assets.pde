@@ -1,30 +1,54 @@
+JSONObject json;
+
 void setup() {
-  size( 700, 300 );
-  noStroke();
+	size( 700, 300 );
+	noStroke();
 
-  int colourOne = color(random(255), random(255), random(255));
-  int colourTwo = color(random(255), random(255), random(255));
+	json = loadJSONObject("colourObj.json");
+	JSONArray colourArrayOne = json.getJSONArray("colour_0");
 
-  int gradientSteps = 250;
-  int gradientStripWidth = width / gradientSteps;
+	Object red = colourArrayOne.get(0);
+	Object blue = colourArrayOne.get(1);
+	Object green = colourArrayOne.get(2);
 
-  for(int i = 0; i < gradientSteps; i++){
+	int r = Integer.parseInt(red.toString());
+	int g = Integer.parseInt(blue.toString());
+	int b = Integer.parseInt(green.toString());
 
-  float transition = map(i, 0, gradientSteps, 0.0, 1.0);
+	json = loadJSONObject("colourObj.json");
+	JSONArray colourArrayTwo = json.getJSONArray("colour_1");
 
-  int interpolatedColour = lerpColor(colourOne, colourTwo, transition);
+	Object redTwo = colourArrayTwo.get(0);
+	Object blueTwo = colourArrayTwo.get(1);
+	Object greenTwo = colourArrayTwo.get(2);
 
-  fill(interpolatedColour);
-  rect(i * gradientStripWidth, 0, width, height);
-  }
+	int r2 = Integer.parseInt(redTwo.toString());
+	int g2 = Integer.parseInt(blueTwo.toString());
+	int b2 = Integer.parseInt(greenTwo.toString());
 
-  noStroke();
-  fill(colourTwo);
-  ellipse(50, 50, 50, 50);
+	int colourOne = color(r, g, b);
+	int colourTwo = color(r2, g2, b2);
 
-  noStroke();
-  fill(colourOne);
-  ellipse(width-50, height-50, 50, 50);
-  save("output.jpeg");
-  exit();
+	int gradientSteps = 250;
+	int gradientStripWidth = width / gradientSteps;
+
+	for(int i = 0; i < gradientSteps; i++){
+
+		float transition = map(i, 0, gradientSteps, 0.0, 1.0);
+
+		int interpolatedColour = lerpColor(colourOne, colourTwo, transition);
+
+		fill(interpolatedColour);
+		rect(i * gradientStripWidth, 0, width, height);
+	}
+
+	noStroke();
+	fill(colourTwo);
+	ellipse(50, 50, 50, 50);
+
+	noStroke();
+	fill(colourOne);
+	ellipse(width-50, height-50, 50, 50);
+	save("output.jpeg");
+	exit();
 }
