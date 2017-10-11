@@ -2,14 +2,15 @@
 const Twit = require( 'twit' ); // Require twit NPM package.
 const exec = require( 'child_process' ).exec;
 const fs = require( 'fs' );
-const request = require( 'request' ); // Request for downloading files
+const request = require( 'request' ); // Request for downloading files.
 const axios = require( 'axios' ); // Require axios NPM package.
 const hexRgb = require('hex-rgb'); // Hex to RGB package.
-const helpers = require('./helpers.js'); // Helper functions
-require('dotenv').config(); // Require .env NPM package
+const helpers = require('./helpers.js'); // Helper functions.
+const responses = require('./responses.json'); // Responses array.
+require('dotenv').config(); // Require .env NPM package.
 
 // Testing Flag
-const dev = false;
+const dev = true;
 
 // Global VARS
 const randomNum = helpers.randomNum;
@@ -25,8 +26,8 @@ const T = new Twit( {
 const key = process.env.KEY; // Variable for key.
 const hour = 3600000; // How many ms in an hour?
 // Variable for setting time interval.
-const tweetInterval = hour * 8; // for actual bot timing
-// const tweetInterval = 12000; // for testing bot timing
+// const tweetInterval = hour * 8; // for actual bot timing
+const tweetInterval = 12000; // for testing bot timing
 
 // Get the twitter user stream (for responses to bot).
 const stream = T.stream('user');
@@ -117,7 +118,7 @@ function createJsonFile(obj) {
 // Instructions for when someone tweets Deltron w/out hexes.
 function instructionsTweet(tweetObj) {
 	const name = tweetObj.user.screen_name;
-	const instructionMessage = "I can make you a nice gradient! Just @ me with two (2) hex codes.";
+	const instructionMessage = `I can make you a nice gradient! Just @ me with two (2) hex codes ${responses.emoji[`${randomNum(responses.emoji.length)}`]}`;
 	const tweet = {
 		status: `@${name} ${instructionMessage}`
 	};
@@ -178,7 +179,7 @@ function tweetEvent(tweet) {
 function gradientRequest(tweet, legitHexArr) {
 	console.log('start gradient request');
 
-	const gradientCSS = ' linear-gradient( 90deg, #' + legitHexArr[0] + ', #' + legitHexArr[1] + ' );'
+	const gradientCSS = ` ${responses.response[`${randomNum(responses.response.length)}`]} ${responses.emoji[`${randomNum(responses.emoji.length)}`]}`;
 	const name = tweet.user.screen_name;
 	const id = tweet.id_str;
 
@@ -226,4 +227,4 @@ function gradientRequest(tweet, legitHexArr) {
 } // End gradientRequest
 
 tweetIt();
-setInterval( tweetIt, tweetInterval );
+// setInterval( tweetIt, tweetInterval );
