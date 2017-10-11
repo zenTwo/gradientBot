@@ -3,3 +3,4 @@ config.js
 /*.env
 **/colourObj.json
 **/output.jpeg
+**/gradient_bot.pem
