@@ -142,9 +142,14 @@ function tweetEvent(tweet) {
 			.filter(hash => isHex(hash))
 			.slice(0, 2);
 
-		console.log(legitHexArr);
-		convertToRgb(legitHexArr);
-		gradientRequest(tweet, legitHexArr);
+		if (legitHexArr.length === 2) {
+			console.log(legitHexArr);
+			convertToRgb(legitHexArr);
+			gradientRequest(tweet, legitHexArr);
+		} else {
+			instructionsTweet(tweet);
+			console.log("sending out instructions...");
+		}
 	}
 } // End tweetEvent
 
