@@ -114,6 +114,27 @@ function createJsonFile(obj) {
 	});
 }
 
+// Instructions for when someone tweets Deltron w/out hexes.
+function instructionsTweet(tweetObj) {
+	const name = tweetObj.user.screen_name;
+	const instructionMessage = "I can make you a nice gradient! Just @ me with two (2) hex codes.";
+	const tweet = {
+		status: `@${name} ${instructionMessage}`
+	};
+
+	T.post('statuses/update', tweet, tweeted);
+
+	// Callback for when tweet is sent.
+	function tweeted(err, data, response) {
+		if (err) {
+			console.log( 'Something went wrong...' );
+			console.log(err);
+		} else {
+			console.log( 'It worked!' );
+		}
+	} // end tweeted
+}
+
 // Create an event when someone tweets Deltron_f.
 stream.on('tweet', tweetEvent);
 
