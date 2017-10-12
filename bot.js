@@ -10,7 +10,7 @@ const responses = require('./responses.json'); // Responses array.
 require('dotenv').config(); // Require .env NPM package.
 
 // Testing Flag
-const dev = true;
+const dev = false;
 
 // Global VARS
 const randomNum = helpers.randomNum;
@@ -26,8 +26,8 @@ const T = new Twit( {
 const key = process.env.KEY; // Variable for key.
 const hour = 3600000; // How many ms in an hour?
 // Variable for setting time interval.
-// const tweetInterval = hour * 8; // for actual bot timing
-const tweetInterval = 12000; // for testing bot timing
+const tweetInterval = hour * 8; // for actual bot timing
+// const tweetInterval = 12000; // for testing bot timing
 
 // Get the twitter user stream (for responses to bot).
 const stream = T.stream('user');
@@ -43,7 +43,7 @@ function tweetIt() {
 		colour_1: colourTwo
 	};
 
-	const gradientCSS = ' linear-gradient( 90deg, rgb( ' + obj.colour_0 + ' ), rgb( ' + obj.colour_1 + ' ) );'
+	const gradientCSS = ' { rgb( ' + obj.colour_0 + ' ), rgb( ' + obj.colour_1 + ' ) };'
 	createJsonFile(obj);
 
 	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : './assets/assets';
@@ -227,4 +227,4 @@ function gradientRequest(tweet, legitHexArr) {
 } // End gradientRequest
 
 tweetIt();
-// setInterval( tweetIt, tweetInterval );
+setInterval( tweetIt, tweetInterval );
