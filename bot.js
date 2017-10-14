@@ -133,10 +133,9 @@ function instructionsTweet(tweetObj) {
 	// Callback for when tweet is sent.
 	function tweeted(err, data, response) {
 		if (err) {
-			console.log( 'Something went wrong...' );
 			console.log(err);
 		} else {
-			console.log( 'It worked!' );
+			console.log( 'Instructions sent.' );
 		}
 	} // end tweeted
 }
@@ -158,6 +157,7 @@ function tweetEvent(tweet) {
 
 		// Create an array from the tweet string, so we can iterate over the words
 		const tweetArr = txt.split(' ');
+		console.log('the tweet array is ' + tweetArr);
 
 		// User filter and map to iterate over the array.
 		// Make sure the proposed hexcodes are indeed hexcodes.
@@ -170,12 +170,14 @@ function tweetEvent(tweet) {
 			.slice(0, 2);
 
 		if (legitHexArr.length === 2) {
-			console.log(legitHexArr);
+			console.log('legit hex array is ' + legitHexArr);
 			convertToRgb(legitHexArr);
+
+			console.log("post conversion: " + legitHexArr);
 			gradientRequest(tweet, legitHexArr);
 		} else {
+			console.log("Sending out instructions...");
 			instructionsTweet(tweet);
-			console.log("sending out instructions...");
 		}
 	}
 } // End tweetEvent
@@ -189,6 +191,7 @@ function gradientRequest(tweet, legitHexArr) {
 	const id = tweet.id_str;
 
 	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : './assets/assets';
+	exec(command, processing);
 
 	// Callback for command line process.
 	function processing() {
@@ -222,13 +225,12 @@ function gradientRequest(tweet, legitHexArr) {
 		// Callback for when tweet is sent.
 		function tweeted(err, data, response) {
 			if (err) {
-				console.log( 'Something went wrong...' );
+				console.log(err);
 			} else {
-				console.log( 'It worked!' );
+				console.log( 'Sent custom gradient back.' );
 			}
 		} // end tweeted
 	} // end processing
-	exec(command, processing);
 } // End gradientRequest
 
 tweetIt();
