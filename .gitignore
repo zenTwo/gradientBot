@@ -4,3 +4,5 @@ config.js
 **/colourObj.json
 **/output.jpeg
 **/gradient_bot.pem
+err.log
+out.log

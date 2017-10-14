@@ -2,11 +2,12 @@
 const Twit = require( 'twit' ); // Require twit NPM package.
 const exec = require( 'child_process' ).exec;
 const fs = require( 'fs' );
-const request = require( 'request' ); // Request for downloading files
+const request = require( 'request' ); // Request for downloading files.
 const axios = require( 'axios' ); // Require axios NPM package.
 const hexRgb = require('hex-rgb'); // Hex to RGB package.
-const helpers = require('./helpers.js'); // Helper functions
-require('dotenv').config(); // Require .env NPM package
+const helpers = require('./helpers.js'); // Helper functions.
+const responses = require('./responses.json'); // Responses array.
+require('dotenv').config(); // Require .env NPM package.
 
 // Testing Flag
 const dev = false;
@@ -42,10 +43,13 @@ function tweetIt() {
 		colour_1: colourTwo
 	};
 
-	const gradientCSS = ' linear-gradient( 90deg, rgb( ' + obj.colour_0 + ' ), rgb( ' + obj.colour_1 + ' ) );'
+	const gradientCSS = `rgb(${obj.colour_0}) + rgb(${obj.colour_1}) ${responses.emoji[7]}`;
+
 	createJsonFile(obj);
 
 	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : './assets/assets';
+
+	exec(command, processing);
 
 	// Callback for command line process.
 	function processing() {
@@ -74,14 +78,12 @@ function tweetIt() {
 		// Callback for when tweet is sent.
 		function tweeted(err, data, response) {
 			if (err) {
-				console.log( 'Something went wrong...' );
+				console.log(err);
 			} else {
-				console.log( 'It worked!' );
+				console.log( 'Random gradient posted.' );
 			}
 		} // end tweeted
 	} // end processing
-
-	exec(command, processing);
 } // end tweetIt
 
 function getRandomColours() {
@@ -94,6 +96,7 @@ function getRandomColours() {
 }
 
 function convertToRgb(hexArr) {
+	console.log("Conversion time: " + hexArr, hexArr.length);
 	// Object template:
 	// {
 	// 	colour_0: [255, 255, 255]
@@ -101,7 +104,10 @@ function convertToRgb(hexArr) {
 	var obj = {};
 
 	for (var index = 0; index < hexArr.length; index++) {
-		const rgbVal = hexRgb(hexArr[index]);
+		console.log("Before conversion: " + hexArr[index]);
+		var rgbVal = hexRgb(hexArr[index]);
+
+		console.log('rbgval is ' + rgbVal);
 		obj[`colour_${index}`] = rgbVal;
 	}
 	createJsonFile(obj);
@@ -112,6 +118,26 @@ function createJsonFile(obj) {
 		fs.writeFile('./assets/colourObj.json', json, 'utf8', () => {
 		console.log( 'created json file!' );
 	});
+}
+
+// Instructions for when someone tweets Deltron w/out hexes.
+function instructionsTweet(tweetObj) {
+	const name = tweetObj.user.screen_name;
+	const instructionMessage = `I can make you a nice gradient! Just @ me with two (2) hex codes ${responses.emoji[`${randomNum(responses.emoji.length)}`]}`;
+	const tweet = {
+		status: `@${name} ${instructionMessage}`
+	};
+
+	T.post('statuses/update', tweet, tweeted);
+
+	// Callback for when tweet is sent.
+	function tweeted(err, data, response) {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log( 'Instructions sent.' );
+		}
+	} // end tweeted
 }
 
 // Create an event when someone tweets Deltron_f.
@@ -131,6 +157,7 @@ function tweetEvent(tweet) {
 
 		// Create an array from the tweet string, so we can iterate over the words
 		const tweetArr = txt.split(' ');
+		console.log('the tweet array is ' + tweetArr);
 
 		// User filter and map to iterate over the array.
 		// Make sure the proposed hexcodes are indeed hexcodes.
@@ -142,9 +169,16 @@ function tweetEvent(tweet) {
 			.filter(hash => isHex(hash))
 			.slice(0, 2);
 
-		console.log(legitHexArr);
-		convertToRgb(legitHexArr);
-		gradientRequest(tweet, legitHexArr);
+		if (legitHexArr.length === 2) {
+			console.log('legit hex array is ' + legitHexArr);
+			convertToRgb(legitHexArr);
+
+			console.log("post conversion: " + legitHexArr);
+			gradientRequest(tweet, legitHexArr);
+		} else {
+			console.log("Sending out instructions...");
+			instructionsTweet(tweet);
+		}
 	}
 } // End tweetEvent
 
@@ -152,11 +186,12 @@ function tweetEvent(tweet) {
 function gradientRequest(tweet, legitHexArr) {
 	console.log('start gradient request');
 
-	const gradientCSS = ' linear-gradient( 90deg, #' + legitHexArr[0] + ', #' + legitHexArr[1] + ' );'
+	const gradientCSS = ` ${responses.response[`${randomNum(responses.response.length)}`]} ${responses.emoji[`${randomNum(responses.emoji.length)}`]}`;
 	const name = tweet.user.screen_name;
 	const id = tweet.id_str;
 
 	var command = dev ? 'processing-java --sketch=`pwd`/assets/ --run' : './assets/assets';
+	exec(command, processing);
 
 	// Callback for command line process.
 	function processing() {
@@ -190,13 +225,12 @@ function gradientRequest(tweet, legitHexArr) {
 		// Callback for when tweet is sent.
 		function tweeted(err, data, response) {
 			if (err) {
-				console.log( 'Something went wrong...' );
+				console.log(err);
 			} else {
-				console.log( 'It worked!' );
+				console.log( 'Sent custom gradient back.' );
 			}
 		} // end tweeted
 	} // end processing
-	exec(command, processing);
 } // End gradientRequest
 
 tweetIt();
