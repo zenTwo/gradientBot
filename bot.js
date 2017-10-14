@@ -78,14 +78,12 @@ function tweetIt() {
 		// Callback for when tweet is sent.
 		function tweeted(err, data, response) {
 			if (err) {
-				console.log( 'Something went wrong...' );
+				console.log(err);
 			} else {
-				console.log( 'It worked!' );
+				console.log( 'Random gradient posted.' );
 			}
 		} // end tweeted
 	} // end processing
-
-	exec(command, processing);
 } // end tweetIt
 
 function getRandomColours() {
@@ -98,6 +96,7 @@ function getRandomColours() {
 }
 
 function convertToRgb(hexArr) {
+	console.log("Conversion time: " + hexArr, hexArr.length);
 	// Object template:
 	// {
 	// 	colour_0: [255, 255, 255]
@@ -105,7 +104,10 @@ function convertToRgb(hexArr) {
 	var obj = {};
 
 	for (var index = 0; index < hexArr.length; index++) {
-		const rgbVal = hexRgb(hexArr[index]);
+		console.log("Before conversion: " + hexArr[index]);
+		var rgbVal = hexRgb(hexArr[index]);
+
+		console.log('rbgval is ' + rgbVal);
 		obj[`colour_${index}`] = rgbVal;
 	}
 	createJsonFile(obj);
