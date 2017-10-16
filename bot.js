@@ -43,7 +43,7 @@ function tweetIt() {
 		colour_1: colourTwo
 	};
 
-	const gradientCSS = `rgb(${obj.colour_0}) + rgb(${obj.colour_1}) ${responses.emoji[7]}`;
+	const gradientCSS = `rgb(${obj.colour_0.join(', ')}) + rgb(${obj.colour_1.join(', ')}) ${responses.emoji[7]}`;
 
 	createJsonFile(obj);
 
